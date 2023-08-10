@@ -1,26 +1,25 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {Route, RouteObject, Routes, useRoutes} from 'react-router';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+import {useAppSelector} from 'hooks/reduxHooks';
+import {authSelector} from 'redux/auth/authSlice';
+import AppRouter from 'AppRouter/AppRouter';
+import SignIn from 'containers/SignIn/SignIn';
+
+const routers: RouteObject[] = [];
+
+
+const App: React.FC = () => {
+  const { tokens } = useAppSelector(authSelector);
+  const router = useRoutes(routers);
+
+  return tokens?.access && tokens?.refresh ? (
+    <AppRouter />
+  ) : (
+    <Routes>
+      {tokens?.access && tokens?.refresh ? null : <Route path='*' element={<SignIn />} />}
+    </Routes>
   );
-}
+};
 
 export default App;
