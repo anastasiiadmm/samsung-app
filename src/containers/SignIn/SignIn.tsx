@@ -1,11 +1,11 @@
-import React from 'react';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { Box, FormControlLabel, TextField } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
 import Checkbox from '@mui/material/Checkbox';
-import { Box, CssBaseline, FormControlLabel, TextField } from '@mui/material';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
+import React from 'react';
 
 const SignIn = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -19,7 +19,6 @@ const SignIn = () => {
 
   return (
     <Container component='main' maxWidth='xs'>
-      <CssBaseline />
       <Box
         sx={{
           marginTop: 8,
