@@ -1,14 +1,13 @@
-import React from 'react';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import React, { ReactNode } from 'react';
 
 import Header from 'components/Header/Header';
 import Navigator from 'components/Navigator/Navigator';
-import Home from 'containers/Home/Home';
 
-import theme from '../../theme';
+import theme from 'theme';
 
 function Copyright() {
   return (
@@ -24,7 +23,11 @@ function Copyright() {
 
 const drawerWidth = 256;
 
-const PaperBase = () => {
+interface PaperBaseProps {
+  children: ReactNode;
+}
+
+const PaperBase: React.FC<PaperBaseProps> = ({ children }) => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const isSmUp = useMediaQuery(theme.breakpoints.up('sm'));
 
@@ -51,7 +54,7 @@ const PaperBase = () => {
       <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         <Header onDrawerToggle={handleDrawerToggle} />
         <Box component='main' sx={{ flex: 1, py: 6, px: 4, bgcolor: '#eaeff1' }}>
-          <Home />
+          {children}
         </Box>
         <Box component='footer' sx={{ p: 2, bgcolor: '#eaeff1' }}>
           <Copyright />

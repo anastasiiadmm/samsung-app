@@ -9,7 +9,7 @@ import App from 'App';
 import store from 'redux/store';
 import 'assets/scss/_index.scss';
 import theme from 'theme';
-import CssBaseline from "@mui/material/CssBaseline";
+import CssBaseline from '@mui/material/CssBaseline';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
@@ -17,8 +17,8 @@ root.render(
   <Provider store={store}>
     <BrowserRouter basename='/'>
       <ThemeProvider theme={theme}>
-        <CssBaseline/>
-        <App/>
+        <CssBaseline />
+        <App />
       </ThemeProvider>
     </BrowserRouter>
   </Provider>,

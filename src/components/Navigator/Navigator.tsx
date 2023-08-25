@@ -1,13 +1,10 @@
 import DnsRoundedIcon from '@mui/icons-material/DnsRounded';
 import HomeIcon from '@mui/icons-material/Home';
 import PeopleIcon from '@mui/icons-material/People';
-import PhoneLinkSetupIcon from '@mui/icons-material/PhonelinkSetup';
 import PermMediaOutlinedIcon from '@mui/icons-material/PhotoSizeSelectActual';
 import PublicIcon from '@mui/icons-material/Public';
 import SettingsIcon from '@mui/icons-material/Settings';
 import SettingsEthernetIcon from '@mui/icons-material/SettingsEthernet';
-import SettingsInputComponentIcon from '@mui/icons-material/SettingsInputComponent';
-import TimerIcon from '@mui/icons-material/Timer';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import Drawer, { DrawerProps } from '@mui/material/Drawer';
@@ -17,33 +14,29 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import React from 'react';
+import { useLocation } from 'react-router';
+import { NavLink } from 'react-router-dom';
 
 const categories = [
   {
     id: 'Build',
     children: [
+      { id: 'Главная', icon: <HomeIcon />, path: '/', active: false },
+      { id: 'Устройства', icon: <PeopleIcon />, path: '/devices', active: false },
+      { id: 'Политика', icon: <DnsRoundedIcon />, path: '/policies', active: false },
+      { id: 'Лицензии', icon: <PermMediaOutlinedIcon />, path: '/licences', active: false },
+      { id: 'Реселлеры', icon: <PublicIcon />, path: '/resellers', active: false },
       {
-        id: 'Authentication',
-        icon: <PeopleIcon />,
-        active: true,
-      },
-      { id: 'Database', icon: <DnsRoundedIcon /> },
-      { id: 'Storage', icon: <PermMediaOutlinedIcon /> },
-      { id: 'Hosting', icon: <PublicIcon /> },
-      { id: 'Functions', icon: <SettingsEthernetIcon /> },
-      {
-        id: 'Machine learning',
-        icon: <SettingsInputComponentIcon />,
+        id: 'Журнал активности',
+        icon: <SettingsEthernetIcon />,
+        path: '/activity-log',
+        active: false,
       },
     ],
   },
   {
     id: 'Quality',
-    children: [
-      { id: 'Analytics', icon: <SettingsIcon /> },
-      { id: 'Performance', icon: <TimerIcon /> },
-      { id: 'Test Lab', icon: <PhoneLinkSetupIcon /> },
-    ],
+    children: [{ id: 'Поддержка', icon: <SettingsIcon />, path: '/support', active: false }],
   },
 ];
 
@@ -63,30 +56,41 @@ const itemCategory = {
 };
 
 const Navigator: React.FC<DrawerProps> = ({ ...other }) => {
+  const location = useLocation();
+
+  const updatedCategories = categories.map((category) => {
+    const updatedChildren = category.children.map((child) => {
+      return {
+        ...child,
+        active: child.path === location.pathname,
+      };
+    });
+
+    return {
+      ...category,
+      children: updatedChildren,
+    };
+  });
+
   return (
     <Drawer variant='permanent' {...other}>
       <List disablePadding>
-        <ListItem sx={{ ...item, ...itemCategory, fontSize: 22, color: '#fff' }}>
-          Paperbase
-        </ListItem>
-        <ListItem sx={{ ...item, ...itemCategory }}>
-          <ListItemIcon>
-            <HomeIcon />
-          </ListItemIcon>
-          <ListItemText>Project Overview</ListItemText>
-        </ListItem>
-        {categories.map(({ id, children }) => (
+        <NavLink to='/' style={{ textDecoration: 'none' }}>
+          <ListItem sx={{ ...item, ...itemCategory, fontSize: 22, color: '#fff' }}>
+            Samsung
+          </ListItem>
+        </NavLink>
+        {updatedCategories.map(({ id, children }) => (
           <Box key={id} sx={{ bgcolor: '#101F33' }}>
-            <ListItem sx={{ py: 2, px: 3 }}>
-              <ListItemText sx={{ color: '#fff' }}>{id}</ListItemText>
-            </ListItem>
-            {children.map(({ id: childId, icon, active }) => (
-              <ListItem disablePadding key={childId}>
-                <ListItemButton selected={active} sx={item}>
-                  <ListItemIcon>{icon}</ListItemIcon>
-                  <ListItemText>{childId}</ListItemText>
-                </ListItemButton>
-              </ListItem>
+            {children.map(({ id: childId, icon, path, active }) => (
+              <NavLink to={path} key={childId} style={{ textDecoration: 'none' }}>
+                <ListItem disablePadding>
+                  <ListItemButton selected={active} sx={item}>
+                    <ListItemIcon>{icon}</ListItemIcon>
+                    <ListItemText>{childId}</ListItemText>
+                  </ListItemButton>
+                </ListItem>
+              </NavLink>
             ))}
             <Divider sx={{ mt: 2 }} />
           </Box>
