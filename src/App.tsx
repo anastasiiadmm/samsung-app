@@ -2,23 +2,31 @@ import React from 'react';
 import { Route, RouteObject, Routes, useRoutes } from 'react-router';
 
 import PaperBase from 'components/PaperBase/PaperBase';
+import Devices from 'containers/Devices/Devices';
 import Home from 'containers/Home/Home';
 import SignIn from 'containers/SignIn/SignIn';
-import { useAppSelector } from 'hooks/reduxHooks';
-import { authSelector } from 'redux/auth/authSlice';
+import { useTokenConfigs } from 'hooks/useCustomConfigs';
 
 const routers: RouteObject[] = [
   {
     path: '/',
     element: <Home />,
   },
+  {
+    path: '/devices',
+    element: <Devices />,
+  },
 ];
 
 const App: React.FC = () => {
-  const { tokens } = useAppSelector(authSelector);
   const router = useRoutes(routers);
+  const tokenConfigs = useTokenConfigs();
 
-  return <PaperBase>{router}</PaperBase>;
+  return tokenConfigs ? (
+    <PaperBase>{router}</PaperBase>
+  ) : (
+    <Routes>{tokenConfigs ? null : <Route path='*' element={<SignIn />} />}</Routes>
+  );
 };
 
 export default App;
