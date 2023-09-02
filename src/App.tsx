@@ -4,6 +4,7 @@ import { Route, RouteObject, Routes, useRoutes } from 'react-router';
 import PaperBase from 'components/PaperBase/PaperBase';
 import Devices from 'containers/Devices/Devices';
 import Home from 'containers/Home/Home';
+import Policies from 'containers/Policies/Policies';
 import SignIn from 'containers/SignIn/SignIn';
 import { useTokenConfigs } from 'hooks/useCustomConfigs';
 
@@ -15,6 +16,10 @@ const routers: RouteObject[] = [
   {
     path: '/devices',
     element: <Devices />,
+  },
+  {
+    path: '/policies',
+    element: <Policies />,
   },
 ];
 
