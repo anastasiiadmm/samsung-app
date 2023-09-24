@@ -1,15 +1,34 @@
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { Box, FormControlLabel, TextField } from '@mui/material';
-import Avatar from '@mui/material/Avatar';
+import { Box, CircularProgress, FormControlLabel, TextField } from '@mui/material';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import React from 'react';
+import React, { useState } from 'react';
+
+import logo from 'assets/images/logo.svg';
+import { useAppDispatch, useAppSelector } from 'hooks/reduxHooks';
+import useAlert from 'hooks/useAlert';
+import { authSelector, loginUser } from 'redux/auth/authSlice';
 
 const SignIn = () => {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const dispatch = useAppDispatch();
+  const { showAlert, Alert } = useAlert();
+  const { loading } = useAppSelector(authSelector);
+  const [username, setUsername] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    try {
+      const loginData = {
+        username,
+        password,
+      };
+
+      await dispatch(loginUser(loginData)).unwrap();
+    } catch (e) {
+      showAlert('error', e?.message || 'Ошибка авторизации');
+    }
   };
 
   return (
@@ -22,9 +41,7 @@ const SignIn = () => {
           alignItems: 'center',
         }}
       >
-        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-          <LockOutlinedIcon />
-        </Avatar>
+        <img style={{ width: 150 }} src={logo} alt='logo' />
         <Typography component='h1' variant='h5'>
           Войти
         </Typography>
@@ -33,11 +50,13 @@ const SignIn = () => {
             margin='normal'
             required
             fullWidth
-            id='email'
-            label='Email'
-            name='email'
-            autoComplete='email'
+            id='username'
+            label='Username'
+            name='username'
+            autoComplete='username'
             autoFocus
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
           <TextField
             margin='normal'
@@ -48,16 +67,19 @@ const SignIn = () => {
             type='password'
             id='password'
             autoComplete='current-password'
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
           <FormControlLabel
             control={<Checkbox value='remember' color='primary' />}
             label='Запомнить меня'
           />
           <Button type='submit' fullWidth variant='contained' sx={{ mt: 3, mb: 2 }}>
-            Войти
+            {loading ? <CircularProgress size={24} color='inherit' /> : 'Войти'}
           </Button>
         </Box>
       </Box>
+      {Alert}
     </Container>
   );
 };

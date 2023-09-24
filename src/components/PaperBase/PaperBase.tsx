@@ -40,14 +40,14 @@ const PaperBase: React.FC<PaperBaseProps> = ({ children }) => {
       <Box component='nav' sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}>
         {isSmUp ? null : (
           <Navigator
-            PaperProps={{ style: { width: drawerWidth } }}
+            PaperProps={{ style: { width: drawerWidth, justifyContent: 'space-between' } }}
             variant='temporary'
             open={mobileOpen}
             onClose={handleDrawerToggle}
           />
         )}
         <Navigator
-          PaperProps={{ style: { width: drawerWidth } }}
+          PaperProps={{ style: { width: drawerWidth, justifyContent: 'space-between' } }}
           sx={{ display: { sm: 'block', xs: 'none' } }}
         />
       </Box>

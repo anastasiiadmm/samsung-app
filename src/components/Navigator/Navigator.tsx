@@ -1,5 +1,6 @@
 import DnsRoundedIcon from '@mui/icons-material/DnsRounded';
 import HomeIcon from '@mui/icons-material/Home';
+import LogoutIcon from '@mui/icons-material/Logout';
 import PeopleIcon from '@mui/icons-material/People';
 import PermMediaOutlinedIcon from '@mui/icons-material/PhotoSizeSelectActual';
 import PublicIcon from '@mui/icons-material/Public';
@@ -14,8 +15,12 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import React from 'react';
-import { useLocation } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { NavLink } from 'react-router-dom';
+
+import { useAppDispatch } from 'hooks/reduxHooks';
+import { logoutUser } from 'redux/auth/authSlice';
+import { logoutLocalStorage } from 'utils/storage';
 
 const categories = [
   {
@@ -57,6 +62,8 @@ const itemCategory = {
 
 const Navigator: React.FC<DrawerProps> = ({ ...other }) => {
   const location = useLocation();
+  const push = useNavigate();
+  const dispatch = useAppDispatch();
 
   const updatedCategories = categories.map((category) => {
     const updatedChildren = category.children.map((child) => {
@@ -71,6 +78,13 @@ const Navigator: React.FC<DrawerProps> = ({ ...other }) => {
       children: updatedChildren,
     };
   });
+
+  const logoutHandler = () => {
+    push('/');
+    logoutLocalStorage();
+    dispatch(logoutUser());
+    window.location.reload();
+  };
 
   return (
     <Drawer variant='permanent' {...other}>
@@ -96,6 +110,16 @@ const Navigator: React.FC<DrawerProps> = ({ ...other }) => {
           </Box>
         ))}
       </List>
+      <Box sx={{ bgcolor: '#101F33', color: 'white' }}>
+        <ListItem disablePadding onClick={logoutHandler}>
+          <ListItemButton>
+            <ListItemIcon>
+              <LogoutIcon />
+            </ListItemIcon>
+            <ListItemText>Выход</ListItemText>
+          </ListItemButton>
+        </ListItem>
+      </Box>
     </Drawer>
   );
 };
