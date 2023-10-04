@@ -1,39 +1,43 @@
 import { createTheme } from '@mui/material/styles';
+import { ruRU } from '@mui/material/locale';
 
-const baseTheme = createTheme({
-  palette: {
-    primary: {
-      light: '#63ccff',
-      main: '#009be5',
-      dark: '#006db3',
+const baseTheme = createTheme(
+  {
+    palette: {
+      primary: {
+        light: '#63ccff',
+        main: '#009be5',
+        dark: '#006db3',
+      },
     },
-  },
-  typography: {
-    h5: {
-      fontWeight: 500,
-      fontSize: 26,
-      letterSpacing: 0.5,
+    typography: {
+      h5: {
+        fontWeight: 500,
+        fontSize: 26,
+        letterSpacing: 0.5,
+      },
     },
-  },
-  shape: {
-    borderRadius: 8,
-  },
-  components: {
-    MuiTab: {
-      defaultProps: {
-        disableRipple: true,
+    shape: {
+      borderRadius: 8,
+    },
+    components: {
+      MuiTab: {
+        defaultProps: {
+          disableRipple: true,
+        },
+      },
+    },
+    mixins: {
+      toolbar: {
+        minHeight: 48,
       },
     },
   },
-  mixins: {
-    toolbar: {
-      minHeight: 48,
-    },
-  },
-});
+  ruRU,
+);
 
 // eslint-disable-next-line import/no-anonymous-default-export
-export default {
+const themeWithOverrides = {
   ...baseTheme,
   components: {
     MuiDrawer: {
@@ -46,7 +50,7 @@ export default {
     MuiButton: {
       styleOverrides: {
         root: {
-          textTransform: 'none',
+          textTransform: 'none' as 'none',
         },
         contained: {
           boxShadow: 'none',
@@ -72,11 +76,11 @@ export default {
     MuiTab: {
       styleOverrides: {
         root: {
-          textTransform: 'none',
+          textTransform: 'none' as 'none',
           margin: '0 16px',
           minWidth: 0,
           padding: 0,
-          [baseTheme.breakpoints.up('md')]: {
+          '@media (min-width:960px)': {
             padding: 0,
             minWidth: 0,
           },
@@ -143,3 +147,7 @@ export default {
     },
   },
 };
+
+const theme = createTheme(themeWithOverrides, ruRU);
+
+export default theme;
