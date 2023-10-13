@@ -1,31 +1,42 @@
 import SearchIcon from '@mui/icons-material/Search';
 import { Box, Grid, TextField, Toolbar, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
-import { GridColDef } from '@mui/x-data-grid';
+import { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 
 import TableComponent from 'components/TableComponent/TableComponent';
 import { useAppDispatch, useAppSelector } from 'hooks/reduxHooks';
 import { useDebounce } from 'hooks/useDebounce';
+import { ICommands } from 'interfaces/ICommands';
+import { IDevices } from 'interfaces/IDevices';
+import { postCommands } from 'redux/commands/commandsSlice';
 import { devicesSelector, fetchDevices } from 'redux/devices/devicesSlice';
 import { getParams } from 'utils/helper';
 
 const Devices = () => {
   const dispatch = useAppDispatch();
   const { devices, devicesLoading, devicesListPagination } = useAppSelector(devicesSelector);
+  const determinePageNumber = () => {
+    if (devicesListPagination?.next) {
+      return Number(devicesListPagination.next);
+    }
+    if (devicesListPagination?.previous) {
+      return Number(devicesListPagination.previous);
+    }
+    return 1;
+  };
   const [filters, setFilters] = useState({
-    page: devicesListPagination?.next
-      ? Number(devicesListPagination?.next)
-      : Number(devicesListPagination?.previous),
+    page: determinePageNumber(),
     search: '',
   });
+  const [rowSelectionModel, setRowSelectionModel] = useState<GridRowSelectionModel>([]);
+  const [selectedModal, setSelectedModel] = useState<IDevices | null>(null);
   const debouncedSearchTerm = useDebounce(filters?.search, 500);
 
   useEffect(() => {
     const queryString = getParams({
       page: filters?.page,
-      search: debouncedSearchTerm,
     });
 
     dispatch(fetchDevices({ query: queryString }));
@@ -34,6 +45,76 @@ const Devices = () => {
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setFilters((prevFilters) => ({ ...prevFilters, search: value }));
+  };
+
+  const handleRowSelectionChange = (newRowSelectionModel: GridRowSelectionModel) => {
+    if (newRowSelectionModel.length > 1) {
+      newRowSelectionModel = [newRowSelectionModel[newRowSelectionModel.length - 1]];
+    }
+
+    setRowSelectionModel(newRowSelectionModel);
+
+    if (newRowSelectionModel.length > 0) {
+      const selectedRowId = newRowSelectionModel[0];
+      const selectedRow = devices?.find((row) => row.id === selectedRowId);
+
+      if (selectedRow) {
+        setSelectedModel(selectedRow);
+      }
+    }
+  };
+
+  const sendDevicesHandler = (type: string) => {
+    let data: ICommands;
+
+    switch (type) {
+      case 'send-message':
+        data = {
+          command: 'send-message',
+          payload: {
+            device_uid: selectedModal?.imei,
+            message: 'something',
+            tel: selectedModal?.sim_card_number,
+            full_screen: true,
+          },
+        };
+        break;
+      case 'unlock':
+        data = {
+          command: 'unlock',
+          payload: {
+            device_uid: selectedModal?.imei,
+            message: 'something',
+          },
+        };
+        break;
+      case 'lock':
+        data = {
+          command: 'lock',
+          payload: {
+            device_uid: selectedModal?.imei,
+            message: 'something',
+            tel: selectedModal?.sim_card_number,
+            email: 'some@gmail.com',
+          },
+        };
+        break;
+      case 'activate':
+        data = {};
+        break;
+      case 'delete':
+        data = {
+          command: 'delete',
+          payload: {
+            device_uid: selectedModal?.imei,
+          },
+        };
+        break;
+      default:
+        throw new Error(`Unsupported type: ${type}`);
+    }
+
+    dispatch(postCommands({ data }));
   };
 
   const columns: GridColDef[] = [
@@ -52,13 +133,11 @@ const Devices = () => {
       valueFormatter: (params) => moment(params.value as number).format('DD MMM YYYY'),
     },
     { field: 'serial_number', headerName: 'Cерийный номер (S/N)', width: 170 },
-    { field: 'object_id', headerName: 'KG-ID устройства', width: 170 },
     { field: 'model', headerName: 'Модель устройства', width: 160 },
     { field: 'status', headerName: 'Статус устройства', width: 140 },
     { field: 'is_blocked', headerName: 'Заблокирован', width: 140 },
     { field: 'is_deleted', headerName: 'Удален', width: 140 },
     { field: 'sim_card_number', headerName: 'Номер сим-карты', width: 140 },
-    { field: 'payment_status', headerName: 'Статус оплаты', width: 140 },
     { field: 'company', headerName: 'Компания', width: 140 },
   ];
 
@@ -97,13 +176,24 @@ const Devices = () => {
           </Grid>
         </Toolbar>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-          <Button variant='contained'>Уведомление</Button>
-          <Button variant='contained' color='error'>
+          <Button variant='contained' onClick={() => sendDevicesHandler('send-message')}>
+            Уведомление
+          </Button>
+          <Button variant='contained' color='error' onClick={() => sendDevicesHandler('unlock')}>
             Заблокировать
           </Button>
-          <Button variant='contained'>Разблокировать</Button>
-          <Button variant='contained' color='success'>
+          <Button variant='contained' onClick={() => sendDevicesHandler('lock')}>
+            Разблокировать
+          </Button>
+          <Button
+            variant='contained'
+            color='success'
+            onClick={() => sendDevicesHandler('activate')}
+          >
             Активировать
+          </Button>
+          <Button variant='contained' color='error' onClick={() => sendDevicesHandler('delete')}>
+            Удалить
           </Button>
         </Box>
       </Box>
@@ -116,6 +206,8 @@ const Devices = () => {
           currentPage={filters.page - 1}
           rows={devices}
           columns={columns}
+          rowSelectionModel={rowSelectionModel}
+          handleRowSelectionChange={handleRowSelectionChange}
         />
       </Box>
     </Box>

@@ -27,18 +27,17 @@ interface fetchDevicesParams {
 
 export const fetchDevices = createAsyncThunk<IDevices[], fetchDevicesParams>(
   `${nameSpace}/fetchDevices`,
-  async (data, { rejectWithValue }) => {
+  async (query, { rejectWithValue }) => {
     try {
-      const resp = await axiosApi.get<IDevices[] | null>(`/devices/`, {
-        params: data?.query,
+      const resp = await axiosApi.get<IDevices[] | null>(`/devices/?page=1`, {
+        params: query,
       });
       const { data: devices } = resp;
 
       if (!devices) return [];
-
       return devices;
-    } catch (e) {
-      return rejectWithValue({ detail: e?.message });
+    } catch (error) {
+      return rejectWithValue({ detail: error?.message });
     }
   },
 );
