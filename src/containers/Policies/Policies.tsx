@@ -5,6 +5,9 @@ import SimCardIcon from '@mui/icons-material/SimCard';
 import { Box, Card, CardActionArea, CardContent, Typography } from '@mui/material';
 import React from 'react';
 
+import ModalComponent from 'components/Modals/ModalComponent';
+import BlockModal from 'components/Modals/Modals/BlockModal/BlockModal';
+
 const categories = [
   {
     id: 'Блокировка устройства',
@@ -48,45 +51,72 @@ const categories = [
 ];
 
 const Policies = () => {
+  const [open, setOpen] = React.useState(false);
+  const [currentModalPath, setCurrentModalPath] = React.useState<string | null>(null);
+
+  const handleOpen = (path: string) => {
+    setCurrentModalPath(path);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setCurrentModalPath(null);
+  };
+
+  const renderModalContent = (path: string | null) => {
+    switch (path) {
+      case '/lock-phone':
+        return <BlockModal />;
+      default:
+        return null;
+    }
+  };
+
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 5, flexWrap: 'wrap' }}>
-      {categories?.map((category) => {
-        return (
-          <Box
-            sx={{ display: 'flex', flexDirection: 'column', gap: 2, flexWrap: 'wrap' }}
-            key={category.id}
-          >
-            <Typography variant='h5' component='div'>
-              {category.id}
-            </Typography>
-            <Box sx={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
-              {category.children.map((item) => {
-                return (
-                  <Card variant='outlined' key={item.id}>
-                    <CardActionArea>
-                      <CardContent>
-                        <Box
-                          display='flex'
-                          flexDirection='column'
-                          justifyContent='center'
-                          alignItems='center'
-                          height='100%'
-                        >
-                          {item.icon}
-                          <Typography variant='h6' component='div'>
-                            {item.id}
-                          </Typography>
-                        </Box>
-                      </CardContent>
-                    </CardActionArea>
-                  </Card>
-                );
-              })}
+    <>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 5, flexWrap: 'wrap' }}>
+        {categories?.map((category) => {
+          return (
+            <Box
+              sx={{ display: 'flex', flexDirection: 'column', gap: 2, flexWrap: 'wrap' }}
+              key={category.id}
+            >
+              <Typography variant='h5' component='div'>
+                {category.id}
+              </Typography>
+              <Box sx={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
+                {category.children.map((item) => {
+                  return (
+                    <Card variant='outlined' key={item.id} onClick={() => handleOpen(item.path)}>
+                      <CardActionArea>
+                        <CardContent>
+                          <Box
+                            display='flex'
+                            flexDirection='column'
+                            justifyContent='center'
+                            alignItems='center'
+                            height='100%'
+                          >
+                            {item.icon}
+                            <Typography variant='h6' component='div'>
+                              {item.id}
+                            </Typography>
+                          </Box>
+                        </CardContent>
+                      </CardActionArea>
+                    </Card>
+                  );
+                })}
+              </Box>
             </Box>
-          </Box>
-        );
-      })}
-    </Box>
+          );
+        })}
+      </Box>
+      <ModalComponent open={open} handleClose={handleClose}>
+        {renderModalContent(currentModalPath)}
+      </ModalComponent>
+    </>
   );
 };
 
