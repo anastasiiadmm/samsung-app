@@ -7,6 +7,7 @@ import React from 'react';
 
 import ModalComponent from 'components/Modals/ModalComponent';
 import BlockModal from 'components/Modals/Modals/BlockModal/BlockModal';
+import SendNotificationModal from 'components/Modals/Modals/SendNotificationModal/SendNotificationModal';
 
 const categories = [
   {
@@ -68,6 +69,8 @@ const Policies = () => {
     switch (path) {
       case '/lock-phone':
         return <BlockModal />;
+      case '/send-notification':
+        return <SendNotificationModal />;
       default:
         return null;
     }

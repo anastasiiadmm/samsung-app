@@ -51,7 +51,7 @@ const SignIn = () => {
             required
             fullWidth
             id='username'
-            label='Username'
+            label='Логин'
             name='username'
             autoComplete='username'
             autoFocus

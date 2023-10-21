@@ -21,15 +21,24 @@ const style = {
   display: 'flex',
   flexDirection: 'row-reverse',
   alignItems: 'baseline',
+  overflowY: 'auto',
+  maxHeight: '95vh',
+  border: '1px solid gray',
 };
 
 const ModalComponent: React.FC<Props> = ({ open, children, handleClose }) => {
   return (
     <Modal open={open} onClose={handleClose}>
       <Box sx={style}>
-        <IconButton onClick={handleClose} aria-label='delete'>
-          <CloseIcon />
-        </IconButton>
+        <Box sx={{ position: 'relative' }}>
+          <IconButton
+            onClick={handleClose}
+            aria-label='delete'
+            sx={{ position: 'absolute', top: '-42px', right: '-10px' }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </Box>
         <div>{children}</div>
       </Box>
     </Modal>
