@@ -102,7 +102,7 @@ const SendNotificationModal = () => {
             id='outlined-basic'
             label='Уведомление 3'
             variant='outlined'
-            defaultValue='Во избежание отключение вашего телефона, просим вас погасить задолженность'
+            defaultValue='Во избежание отключения вашего телефона, просим вас погасить задолженность'
           />
           {notificationFields.map((fieldNumber) => (
             <TextField

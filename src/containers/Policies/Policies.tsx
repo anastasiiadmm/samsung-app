@@ -1,3 +1,4 @@
+import AddAlertIcon from '@mui/icons-material/AddAlert';
 import AppBlockingIcon from '@mui/icons-material/AppBlocking';
 import PhonelinkLockIcon from '@mui/icons-material/PhonelinkLock';
 import SecurityUpdateGoodIcon from '@mui/icons-material/SecurityUpdateGood';
@@ -7,6 +8,7 @@ import React from 'react';
 
 import ModalComponent from 'components/Modals/ModalComponent';
 import BlockModal from 'components/Modals/Modals/BlockModal/BlockModal';
+import ReminderModal from 'components/Modals/Modals/ReminderModal/ReminderModal';
 import SendNotificationModal from 'components/Modals/Modals/SendNotificationModal/SendNotificationModal';
 
 const categories = [
@@ -47,6 +49,12 @@ const categories = [
         path: '/send-notification',
         active: false,
       },
+      {
+        id: 'Напоминание',
+        icon: <AddAlertIcon sx={{ fontSize: 50 }} />,
+        path: '/reminder',
+        active: false,
+      },
     ],
   },
 ];
@@ -71,6 +79,8 @@ const Policies = () => {
         return <BlockModal />;
       case '/send-notification':
         return <SendNotificationModal />;
+      case '/reminder':
+        return <ReminderModal />;
       default:
         return null;
     }
