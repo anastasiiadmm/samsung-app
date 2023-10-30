@@ -51,8 +51,16 @@ axiosApi.interceptors.response.use(
               refresh,
             },
           };
-          store.dispatch(checkForTokens({ access: newTokens.access, refresh: newTokens.refresh }));
-          addLocalStorage({ access: usersLocal.token.access, refresh: usersLocal.token.refresh });
+          store.dispatch(
+            checkForTokens({
+              access: newTokens.access,
+              refresh: newTokens.refresh,
+            }),
+          );
+          addLocalStorage({
+            access: usersLocal.token.access,
+            refresh: usersLocal.token.refresh,
+          });
           window.dispatchEvent(new Event('storage'));
           return axiosApi(originalRequest);
         }
