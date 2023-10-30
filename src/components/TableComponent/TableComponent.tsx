@@ -9,6 +9,7 @@ interface Props {
   columns: GridColDef[];
   onPageChange: (newPage: number) => void;
   currentPage: number;
+  rowCount: number | undefined;
   loading: Boolean;
   rowSelectionModel: GridRowSelectionModel;
   handleRowSelectionChange: (newRowSelectionModel: GridRowSelectionModel) => void;
@@ -25,6 +26,7 @@ const TableComponent: React.FC<Props> = ({
   onPageChange,
   currentPage,
   rowSelectionModel,
+  rowCount,
   handleRowSelectionChange,
 }) => {
   return (
@@ -51,7 +53,7 @@ const TableComponent: React.FC<Props> = ({
             page={currentPage}
             pageSize={10}
             onPageChange={(params: MyGridPageChangeParams) => onPageChange(params.page)}
-            rowCount={rows?.length}
+            rowCount={rowCount}
             paginationMode='server'
             columns={columns}
             rows={rows || []}

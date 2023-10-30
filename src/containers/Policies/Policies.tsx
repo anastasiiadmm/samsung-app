@@ -1,5 +1,6 @@
 import AddAlertIcon from '@mui/icons-material/AddAlert';
 import AppBlockingIcon from '@mui/icons-material/AppBlocking';
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import PhonelinkLockIcon from '@mui/icons-material/PhonelinkLock';
 import SecurityUpdateGoodIcon from '@mui/icons-material/SecurityUpdateGood';
 import SimCardIcon from '@mui/icons-material/SimCard';
@@ -10,6 +11,7 @@ import ModalComponent from 'components/Modals/ModalComponent';
 import BlockModal from 'components/Modals/Modals/BlockModal/BlockModal';
 import ReminderModal from 'components/Modals/Modals/ReminderModal/ReminderModal';
 import SendNotificationModal from 'components/Modals/Modals/SendNotificationModal/SendNotificationModal';
+import UploadComponent from 'components/Modals/Modals/UploadComponent/UploadComponent';
 
 const categories = [
   {
@@ -49,6 +51,17 @@ const categories = [
         path: '/send-notification',
         active: false,
       },
+    ],
+  },
+  {
+    id: 'Загрузка файла',
+    children: [
+      {
+        id: 'Загрузка файла',
+        icon: <CloudDownloadIcon sx={{ fontSize: 50 }} />,
+        path: '/upload-file',
+        active: false,
+      },
       {
         id: 'Напоминание',
         icon: <AddAlertIcon sx={{ fontSize: 50 }} />,
@@ -81,6 +94,8 @@ const Policies = () => {
         return <SendNotificationModal />;
       case '/reminder':
         return <ReminderModal />;
+      case '/upload-file':
+        return <UploadComponent />;
       default:
         return null;
     }

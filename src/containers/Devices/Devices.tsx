@@ -136,9 +136,8 @@ const Devices = () => {
     { field: 'model', headerName: 'Модель устройства', width: 160 },
     { field: 'status', headerName: 'Статус устройства', width: 140 },
     { field: 'is_blocked', headerName: 'Заблокирован', width: 140 },
-    { field: 'is_deleted', headerName: 'Удален', width: 140 },
     { field: 'sim_card_number', headerName: 'Номер сим-карты', width: 140 },
-    { field: 'company', headerName: 'Компания', width: 140 },
+    { field: 'company_name', headerName: 'Компания', width: 140 },
   ];
 
   return (
@@ -203,6 +202,7 @@ const Devices = () => {
           onPageChange={(newPage) => {
             setFilters({ ...filters, page: newPage + 1 });
           }}
+          rowCount={devicesListPagination?.count || 0}
           currentPage={filters.page - 1}
           rows={devices}
           columns={columns}
