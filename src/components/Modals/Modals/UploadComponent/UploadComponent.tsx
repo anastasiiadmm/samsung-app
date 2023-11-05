@@ -1,10 +1,14 @@
-import { Box, Button, TextField, Typography } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { Box, Button, IconButton, TextField, Typography } from '@mui/material';
 import React, { ChangeEvent, useState } from 'react';
 
+import { useAppDispatch } from 'hooks/reduxHooks';
 import useAlert from 'hooks/useAlert';
+import { uploadFile } from 'redux/upload/uploadSlice';
 
 const UploadComponent = () => {
   const { showAlert, Alert } = useAlert();
+  const dispatch = useAppDispatch();
   const [companyID, setCompanyID] = useState<string>('');
   const [file, setFile] = useState<File | null>(null);
 
@@ -16,19 +20,22 @@ const UploadComponent = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      const data = {
-        companyID,
-        file,
-      };
+      const formData = new FormData();
+      formData.append('company_id', companyID);
+      if (file) {
+        formData.append('excel_file', file);
+      }
 
-      // await dispatch().unwrap();
+      await dispatch(uploadFile(formData)).unwrap();
     } catch (e) {
       showAlert('error', e?.message || 'Ошибка загрузки файла');
     }
   };
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4, flexWrap: 'wrap', mr: 8 }}>
+    <Box
+      sx={{ display: 'flex', flexDirection: 'column', gap: 4, flexWrap: 'wrap', mr: 5, width: 400 }}
+    >
       <Typography variant='h5' component='div'>
         Загрузить файл
       </Typography>
@@ -51,12 +58,21 @@ const UploadComponent = () => {
           onChange={(e) => setCompanyID(e.target.value)}
         />
 
-        <Button variant='contained' component='label' sx={{ width: 200 }}>
+        {file && (
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <p>{file?.name}</p>
+            <IconButton aria-label='delete' size='small' onClick={() => setFile(null)}>
+              <DeleteIcon fontSize='inherit' />
+            </IconButton>
+          </Box>
+        )}
+
+        <Button variant='outlined' component='label' sx={{ width: '100%' }}>
           Загрузить файл
           <input type='file' hidden onChange={handleFileChange} />
         </Button>
 
-        <Button variant='contained' component='label' sx={{ width: 200 }}>
+        <Button type='submit' variant='contained' sx={{ width: '100%', mt: 3 }}>
           Отправить
         </Button>
       </Box>

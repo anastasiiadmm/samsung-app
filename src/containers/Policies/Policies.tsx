@@ -5,13 +5,16 @@ import PhonelinkLockIcon from '@mui/icons-material/PhonelinkLock';
 import SecurityUpdateGoodIcon from '@mui/icons-material/SecurityUpdateGood';
 import SimCardIcon from '@mui/icons-material/SimCard';
 import { Box, Card, CardActionArea, CardContent, Typography } from '@mui/material';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import ModalComponent from 'components/Modals/ModalComponent';
 import BlockModal from 'components/Modals/Modals/BlockModal/BlockModal';
 import ReminderModal from 'components/Modals/Modals/ReminderModal/ReminderModal';
 import SendNotificationModal from 'components/Modals/Modals/SendNotificationModal/SendNotificationModal';
 import UploadComponent from 'components/Modals/Modals/UploadComponent/UploadComponent';
+import { useAppDispatch, useAppSelector } from 'hooks/reduxHooks';
+import useAlert from 'hooks/useAlert';
+import { resetUploadSuccess, uploadSelector } from 'redux/upload/uploadSlice';
 
 const categories = [
   {
@@ -73,8 +76,21 @@ const categories = [
 ];
 
 const Policies = () => {
+  const dispatch = useAppDispatch();
+  const { showAlert, Alert } = useAlert();
+  const { uploadSuccess } = useAppSelector(uploadSelector);
   const [open, setOpen] = React.useState(false);
   const [currentModalPath, setCurrentModalPath] = React.useState<string | null>(null);
+
+  useEffect(() => {
+    if (uploadSuccess) {
+      handleClose();
+      showAlert('success', 'Файл успешно загружен');
+    }
+    return () => {
+      dispatch(resetUploadSuccess());
+    };
+  }, [uploadSuccess]);
 
   const handleOpen = (path: string) => {
     setCurrentModalPath(path);
@@ -144,6 +160,7 @@ const Policies = () => {
       <ModalComponent open={open} handleClose={handleClose}>
         {renderModalContent(currentModalPath)}
       </ModalComponent>
+      {Alert}
     </>
   );
 };
