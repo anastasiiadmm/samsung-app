@@ -1,15 +1,16 @@
 import MenuIcon from '@mui/icons-material/Menu';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import { CircularProgress } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
-import Avatar from '@mui/material/Avatar';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
-import React from 'react';
+import React, { useEffect } from 'react';
 
-import avatar from 'assets/images/1.jpeg';
+import { useAppDispatch, useAppSelector } from 'hooks/reduxHooks';
+import { fetchUser, usersSelector } from 'redux/users/UsersSlice';
 
 interface HeaderProps {
   onDrawerToggle: () => void;
@@ -17,6 +18,12 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ ...props }) => {
   const { onDrawerToggle } = props;
+  const dispatch = useAppDispatch();
+  const { user, userLoading } = useAppSelector(usersSelector);
+
+  useEffect(() => {
+    dispatch(fetchUser());
+  }, [dispatch]);
 
   return (
     <>
@@ -41,11 +48,6 @@ const Header: React.FC<HeaderProps> = ({ ...props }) => {
                 </IconButton>
               </Tooltip>
             </Grid>
-            <Grid item>
-              <IconButton color='inherit' sx={{ p: 0.5 }}>
-                <Avatar src={avatar} alt='My Avatar' />
-              </IconButton>
-            </Grid>
           </Grid>
         </Toolbar>
       </AppBar>
@@ -53,9 +55,13 @@ const Header: React.FC<HeaderProps> = ({ ...props }) => {
         <Toolbar>
           <Grid container alignItems='center' spacing={1}>
             <Grid item xs>
-              <Typography color='inherit' variant='h5' component='h1'>
-                Привет, Mirbek
-              </Typography>
+              {userLoading ? (
+                <CircularProgress />
+              ) : (
+                <Typography color='inherit' variant='h5' component='h1'>
+                  Привет, {user?.username}
+                </Typography>
+              )}
             </Grid>
           </Grid>
         </Toolbar>

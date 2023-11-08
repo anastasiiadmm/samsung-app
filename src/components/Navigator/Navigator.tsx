@@ -2,8 +2,6 @@ import DnsRoundedIcon from '@mui/icons-material/DnsRounded';
 import HomeIcon from '@mui/icons-material/Home';
 import LogoutIcon from '@mui/icons-material/Logout';
 import PeopleIcon from '@mui/icons-material/People';
-import PermMediaOutlinedIcon from '@mui/icons-material/PhotoSizeSelectActual';
-import PublicIcon from '@mui/icons-material/Public';
 import SettingsIcon from '@mui/icons-material/Settings';
 import SettingsEthernetIcon from '@mui/icons-material/SettingsEthernet';
 import Box from '@mui/material/Box';
@@ -29,8 +27,6 @@ const categories = [
       { id: 'Главная', icon: <HomeIcon />, path: '/', active: false },
       { id: 'Устройства', icon: <PeopleIcon />, path: '/devices', active: false },
       { id: 'Политика', icon: <DnsRoundedIcon />, path: '/policies', active: false },
-      { id: 'Лицензии', icon: <PermMediaOutlinedIcon />, path: '/licences', active: false },
-      { id: 'Реселлеры', icon: <PublicIcon />, path: '/resellers', active: false },
       {
         id: 'Журнал активности',
         icon: <SettingsEthernetIcon />,
@@ -91,7 +87,7 @@ const Navigator: React.FC<DrawerProps> = ({ ...other }) => {
       <List disablePadding>
         <NavLink to='/' style={{ textDecoration: 'none' }}>
           <ListItem sx={{ ...item, ...itemCategory, fontSize: 22, color: '#fff' }}>
-            Samsung
+            KNOX KG
           </ListItem>
         </NavLink>
         {updatedCategories.map(({ id, children }) => (

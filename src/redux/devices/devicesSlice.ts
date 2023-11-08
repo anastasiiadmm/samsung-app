@@ -29,9 +29,7 @@ export const fetchDevices = createAsyncThunk<IDevices[], fetchDevicesParams>(
   `${nameSpace}/fetchDevices`,
   async (query, { rejectWithValue }) => {
     try {
-      const resp = await axiosApi.get<IDevices[] | null>(`/devices/?page=1`, {
-        params: query,
-      });
+      const resp = await axiosApi.get<IDevices[] | null>(`/devices/${query.query}`);
       const { data: devices } = resp;
 
       if (!devices) return [];

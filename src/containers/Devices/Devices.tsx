@@ -37,6 +37,7 @@ const Devices = () => {
   useEffect(() => {
     const queryString = getParams({
       page: filters?.page,
+      search: filters?.search,
     });
 
     dispatch(fetchDevices({ query: queryString }));
@@ -120,6 +121,10 @@ const Devices = () => {
   const columns: GridColDef[] = [
     { field: 'imei', headerName: 'IMEI код устройства #1', width: 180 },
     { field: 'imei2', headerName: 'IMEI код устройства #2', width: 180 },
+    { field: 'serial_number', headerName: 'Cерийный номер (S/N)', width: 170 },
+    { field: 'model', headerName: 'Модель устройства', width: 160 },
+    { field: 'status', headerName: 'Статус устройства', width: 140 },
+    { field: 'is_blocked', headerName: 'Заблокирован', width: 140 },
     {
       field: 'created_at',
       headerName: 'Дата создания',
@@ -132,12 +137,6 @@ const Devices = () => {
       width: 140,
       valueFormatter: (params) => moment(params.value as number).format('DD MMM YYYY'),
     },
-    { field: 'serial_number', headerName: 'Cерийный номер (S/N)', width: 170 },
-    { field: 'model', headerName: 'Модель устройства', width: 160 },
-    { field: 'status', headerName: 'Статус устройства', width: 140 },
-    { field: 'is_blocked', headerName: 'Заблокирован', width: 140 },
-    { field: 'sim_card_number', headerName: 'Номер сим-карты', width: 140 },
-    { field: 'company_name', headerName: 'Компания', width: 140 },
   ];
 
   return (
@@ -162,7 +161,7 @@ const Devices = () => {
             <Grid item xs>
               <TextField
                 fullWidth
-                placeholder='Поиск по IMEI/SN или по ID'
+                placeholder='Поиск по IMEI/SN'
                 value={filters?.search}
                 onChange={handleSearchChange}
                 InputProps={{

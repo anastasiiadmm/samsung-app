@@ -1,9 +1,24 @@
+export interface IUser {
+  company: number;
+  created_at: string;
+  email: string;
+  first_name: string;
+  groups: number[];
+  id: number;
+  is_active: boolean;
+  last_name: string;
+  middle_name: string;
+  phone: string;
+  updated_at: string;
+  username: string;
+}
+
 export interface ITokens {
   refresh: string;
   access: string;
 }
 
 export interface userMutation {
-  username: FormDataEntryValue | null;
-  password: FormDataEntryValue | null;
+  username: string | null;
+  password: string | null;
 }

@@ -4,6 +4,7 @@ import authReducer from 'redux/auth/authSlice';
 import commandsSlice from 'redux/commands/commandsSlice';
 import devicesSlice from 'redux/devices/devicesSlice';
 import uploadSlice from 'redux/upload/uploadSlice';
+import usersSlice from 'redux/users/UsersSlice';
 
 export default configureStore({
   reducer: {
@@ -11,6 +12,7 @@ export default configureStore({
     commands: commandsSlice,
     devices: devicesSlice,
     upload: uploadSlice,
+    users: usersSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
