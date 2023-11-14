@@ -30,18 +30,12 @@ axiosApi.interceptors.response.use(
     const statusCode = error?.response?.status;
     const { access, refresh } = store.getState().auth;
 
-    if (
-      access &&
-      statusCode >= 400 &&
-      error.config &&
-      !error.config._isReady &&
-      error.response.data.messages
-    ) {
+    if (access && statusCode >= 400 && originalRequest) {
       originalRequest._isReady = true;
       try {
         const resp = await axiosApi.post('/accounts/refresh/', { refresh });
         // is OK status
-        if (resp.status < 300) {
+        if (resp.status === 200) {
           const newTokens = resp.data;
           axiosApi.defaults.headers.Authorization = `Bearer ${newTokens.access}`;
           const usersLocal = {
@@ -54,14 +48,12 @@ axiosApi.interceptors.response.use(
           store.dispatch(
             checkForTokens({
               access: newTokens.access,
-              refresh: newTokens.refresh,
             }),
           );
           addLocalStorage({
             access: usersLocal.token.access,
             refresh: usersLocal.token.refresh,
           });
-          window.dispatchEvent(new Event('storage'));
           return axiosApi(originalRequest);
         }
       } catch {

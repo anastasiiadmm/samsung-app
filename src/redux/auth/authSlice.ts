@@ -5,7 +5,7 @@ import { AuthError, IErrors } from 'interfaces/IErrors';
 import { IJWTokens } from 'interfaces/IJWTokens';
 import { ITokens, userMutation } from 'interfaces/IUser';
 import axiosApi from 'utils/axios-api';
-import { addLocalStorage, getUserLocalStorage } from 'utils/storage';
+import { addLocalStorage } from 'utils/storage';
 
 interface AuthState extends IJWTokens {
   user: null;
@@ -39,15 +39,6 @@ export const loginUser = createAsyncThunk<ITokens, userMutation>(
     }
   },
 );
-
-export const refreshToken = createAsyncThunk(`${nameSpace}/refreshToken`, async () => {
-  const tokens = getUserLocalStorage();
-
-  if (tokens?.refresh) {
-    const resp = await axiosApi.post('/token/refresh/', tokens.refresh);
-    return resp.data;
-  }
-});
 
 export const authSlice = createSlice({
   name: nameSpace,
@@ -92,11 +83,6 @@ export const authSlice = createSlice({
       if (payload && typeof payload === 'object' && 'detail' in payload) {
         state.error = { detail: payload.detail as string | null };
       }
-    });
-
-    builder.addCase(refreshToken.fulfilled, (state, { payload }) => {
-      state.access = payload.access;
-      state.refresh = payload.refresh;
     });
   },
 });
