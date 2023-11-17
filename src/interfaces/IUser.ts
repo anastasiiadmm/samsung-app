@@ -3,7 +3,7 @@ export interface IUser {
   created_at: string;
   email: string;
   first_name: string;
-  groups: number[];
+  groups: IGroup[];
   id: number;
   is_active: boolean;
   last_name: string;
@@ -11,6 +11,11 @@ export interface IUser {
   phone: string;
   updated_at: string;
   username: string;
+}
+
+export interface IGroup {
+  id: number;
+  name: string;
 }
 
 export interface ITokens {

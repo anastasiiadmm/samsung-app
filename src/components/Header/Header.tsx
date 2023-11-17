@@ -59,7 +59,7 @@ const Header: React.FC<HeaderProps> = ({ ...props }) => {
                 <CircularProgress />
               ) : (
                 <Typography color='inherit' variant='h5' component='h1'>
-                  Привет, {user?.username}
+                  Привет, {user?.first_name}
                 </Typography>
               )}
             </Grid>

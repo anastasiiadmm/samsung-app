@@ -6,6 +6,7 @@ import Devices from 'containers/Devices/Devices';
 import Home from 'containers/Home/Home';
 import Policies from 'containers/Policies/Policies';
 import SignIn from 'containers/SignIn/SignIn';
+import Support from 'containers/Support/Support';
 import { useAppDispatch } from 'hooks/reduxHooks';
 import { useTokenConfigs } from 'hooks/useCustomConfigs';
 import { IListener } from 'interfaces/IApp';
@@ -26,6 +27,10 @@ const routers: RouteObject[] = [
   {
     path: '/policies',
     element: <Policies />,
+  },
+  {
+    path: '/support',
+    element: <Support />,
   },
 ];
 

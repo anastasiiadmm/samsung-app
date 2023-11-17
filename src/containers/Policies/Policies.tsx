@@ -15,65 +15,7 @@ import UploadComponent from 'components/Modals/Modals/UploadComponent/UploadComp
 import { useAppDispatch, useAppSelector } from 'hooks/reduxHooks';
 import useAlert from 'hooks/useAlert';
 import { resetUploadSuccess, uploadSelector } from 'redux/upload/uploadSlice';
-
-const categories = [
-  {
-    id: 'Блокировка устройства',
-    children: [
-      {
-        id: 'Заблокировать',
-        icon: <PhonelinkLockIcon sx={{ fontSize: 50 }} />,
-        path: '/lock-phone',
-        active: false,
-      },
-      {
-        id: 'Разблокировать',
-        icon: <SecurityUpdateGoodIcon sx={{ fontSize: 50 }} />,
-        path: '/unlock-phone',
-        active: false,
-      },
-    ],
-  },
-  {
-    id: 'Расширенные элементы управления',
-    children: [
-      {
-        id: 'Активировать',
-        icon: <SimCardIcon sx={{ fontSize: 50 }} />,
-        path: '/activate-phone',
-        active: false,
-      },
-    ],
-  },
-  {
-    id: 'Обмен сообщениями',
-    children: [
-      {
-        id: 'Уведомление',
-        icon: <AppBlockingIcon sx={{ fontSize: 50 }} />,
-        path: '/send-notification',
-        active: false,
-      },
-    ],
-  },
-  {
-    id: 'Загрузка файла',
-    children: [
-      {
-        id: 'Загрузка файла',
-        icon: <CloudDownloadIcon sx={{ fontSize: 50 }} />,
-        path: '/upload-file',
-        active: false,
-      },
-      {
-        id: 'Напоминание',
-        icon: <AddAlertIcon sx={{ fontSize: 50 }} />,
-        path: '/reminder',
-        active: false,
-      },
-    ],
-  },
-];
+import { usersSelector } from 'redux/users/UsersSlice';
 
 const Policies = () => {
   const dispatch = useAppDispatch();
@@ -81,6 +23,8 @@ const Policies = () => {
   const { uploadSuccess } = useAppSelector(uploadSelector);
   const [open, setOpen] = React.useState(false);
   const [currentModalPath, setCurrentModalPath] = React.useState<string | null>(null);
+  const { user } = useAppSelector(usersSelector);
+  const isUserInExcelGroup = user?.groups.some((group) => group?.name === 'excel');
 
   useEffect(() => {
     if (uploadSuccess) {
@@ -102,6 +46,69 @@ const Policies = () => {
     setCurrentModalPath(null);
   };
 
+  const categories = [
+    {
+      id: 'Блокировка устройства',
+      children: [
+        {
+          id: 'Заблокировать',
+          icon: <PhonelinkLockIcon sx={{ fontSize: 50 }} />,
+          path: '/lock-phone',
+          active: false,
+        },
+        {
+          id: 'Разблокировать',
+          icon: <SecurityUpdateGoodIcon sx={{ fontSize: 50 }} />,
+          path: '/unlock-phone',
+          active: false,
+        },
+      ],
+    },
+    {
+      id: 'Расширенные элементы управления',
+      children: [
+        {
+          id: 'Активировать',
+          icon: <SimCardIcon sx={{ fontSize: 50 }} />,
+          path: '/activate-phone',
+          active: false,
+        },
+      ],
+    },
+    {
+      id: 'Push-уведомления',
+      children: [
+        {
+          id: 'Уведомление',
+          icon: <AppBlockingIcon sx={{ fontSize: 50 }} />,
+          path: '/send-notification',
+          active: false,
+        },
+        {
+          id: 'Напоминание',
+          icon: <AddAlertIcon sx={{ fontSize: 50 }} />,
+          path: '/reminder',
+          active: false,
+        },
+      ],
+    },
+    {
+      id: 'Загрузка файла',
+      children: [
+        {
+          id: 'Загрузка файла',
+          icon: <CloudDownloadIcon sx={{ fontSize: 50 }} />,
+          path: '/upload-file',
+          active: false,
+        },
+      ],
+    },
+  ];
+
+  const filteredCategories = categories.filter((category) => {
+    return category.id !== 'Загрузка файла' || isUserInExcelGroup;
+  });
+
   const renderModalContent = (path: string | null) => {
     switch (path) {
       case '/lock-phone':
@@ -120,7 +127,7 @@ const Policies = () => {
   return (
     <>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 5, flexWrap: 'wrap' }}>
-        {categories?.map((category) => {
+        {filteredCategories?.map((category) => {
           return (
             <Box
               sx={{ display: 'flex', flexDirection: 'column', gap: 2, flexWrap: 'wrap' }}
