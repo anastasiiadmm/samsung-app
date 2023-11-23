@@ -9,9 +9,11 @@ const nameSpace = 'devices';
 
 interface DevicesState {
   devices: IDevices[] | null;
-  devicesLoading: Boolean;
+  devicesLoading: boolean;
   devicesError: IErrors | null;
   devicesListPagination: pagination | null;
+  devicesDeleteLoading: boolean;
+  devicesDeleteError: IErrors | null;
 }
 
 const INITIAL_STATE = {

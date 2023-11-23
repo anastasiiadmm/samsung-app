@@ -30,7 +30,7 @@ axiosApi.interceptors.response.use(
     const statusCode = error?.response?.status;
     const { access, refresh } = store.getState().auth;
 
-    if (access && statusCode >= 400 && originalRequest) {
+    if (access && statusCode >= 401 && originalRequest) {
       originalRequest._isReady = true;
       try {
         const resp = await axiosApi.post('/accounts/refresh/', { refresh });

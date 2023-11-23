@@ -44,7 +44,7 @@ const UploadComponent = () => {
         component='form'
         onSubmit={handleSubmit}
         noValidate
-        sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 3 }}
+        sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 3, marginRight: '-40px' }}
       >
         <TextField
           margin='normal'

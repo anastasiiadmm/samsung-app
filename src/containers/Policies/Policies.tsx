@@ -11,6 +11,7 @@ import ModalComponent from 'components/Modals/ModalComponent';
 import BlockModal from 'components/Modals/Modals/BlockModal/BlockModal';
 import ReminderModal from 'components/Modals/Modals/ReminderModal/ReminderModal';
 import SendNotificationModal from 'components/Modals/Modals/SendNotificationModal/SendNotificationModal';
+import UnlockModal from 'components/Modals/Modals/UnlockModal/UnlockModal';
 import UploadComponent from 'components/Modals/Modals/UploadComponent/UploadComponent';
 import { useAppDispatch, useAppSelector } from 'hooks/reduxHooks';
 import useAlert from 'hooks/useAlert';
@@ -113,6 +114,8 @@ const Policies = () => {
     switch (path) {
       case '/lock-phone':
         return <BlockModal />;
+      case '/unlock-phone':
+        return <UnlockModal />;
       case '/send-notification':
         return <SendNotificationModal />;
       case '/reminder':

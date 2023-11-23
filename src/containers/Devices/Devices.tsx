@@ -66,50 +66,46 @@ const Devices = () => {
   };
 
   const sendDevicesHandler = (type: string) => {
-    let data: ICommands;
+    let data: ICommands = {};
 
     switch (type) {
       case 'send-message':
         data = {
           command: 'send-message',
           payload: {
-            device_uid: selectedModal?.imei,
-            message: 'something',
-            tel: selectedModal?.sim_card_number,
-            full_screen: true,
+            message: '',
+            tel: '',
+            enable_full_screen: false,
           },
-        };
+        } as ICommands;
         break;
       case 'unlock':
         data = {
           command: 'unlock',
           payload: {
-            device_uid: selectedModal?.imei,
+            device_uid: selectedModal?.imei || '',
             message: 'something',
           },
-        };
+        } as ICommands;
         break;
       case 'lock':
         data = {
           command: 'lock',
           payload: {
-            device_uid: selectedModal?.imei,
-            message: 'something',
-            tel: selectedModal?.sim_card_number,
-            email: 'some@gmail.com',
+            device_uid: selectedModal?.imei || '',
+            message: '',
+            tel: selectedModal?.sim_card_number || '',
+            email: '',
           },
-        };
-        break;
-      case 'activate':
-        data = {};
+        } as ICommands;
         break;
       case 'delete':
         data = {
           command: 'delete',
           payload: {
-            device_uid: selectedModal?.imei,
+            device_uid: selectedModal?.imei || '',
           },
-        };
+        } as ICommands;
         break;
       default:
         throw new Error(`Unsupported type: ${type}`);
