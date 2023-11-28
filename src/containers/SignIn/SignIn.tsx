@@ -4,6 +4,7 @@ import {
   CircularProgress,
   FormControl,
   FormControlLabel,
+  Grid,
   IconButton,
   InputAdornment,
   InputLabel,
@@ -15,6 +16,8 @@ import Checkbox from '@mui/material/Checkbox';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import React, { useState } from 'react';
+
+import { Link } from 'react-router-dom';
 
 import logo from 'assets/images/logo.svg';
 import { useAppDispatch, useAppSelector } from 'hooks/reduxHooks';
@@ -100,6 +103,11 @@ const SignIn = () => {
               label='Пароль'
             />
           </FormControl>
+          <Grid container sx={{ display: 'flex', justifyContent: 'right' }}>
+            <Link to='/password-recovery' style={{ textDecoration: 'none', color: '#009be5' }}>
+              Забыли пароль?
+            </Link>
+          </Grid>
           <FormControlLabel
             control={<Checkbox value='remember' color='primary' />}
             label='Запомнить меня'

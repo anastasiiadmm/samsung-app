@@ -12,7 +12,6 @@ import { ICommands } from 'interfaces/ICommands';
 import { IDevices } from 'interfaces/IDevices';
 import { postCommands } from 'redux/commands/commandsSlice';
 import { devicesSelector, fetchDevices } from 'redux/devices/devicesSlice';
-import { getParams } from 'utils/helper';
 
 const Devices = () => {
   const dispatch = useAppDispatch();
@@ -35,12 +34,12 @@ const Devices = () => {
   const debouncedSearchTerm = useDebounce(filters?.search, 500);
 
   useEffect(() => {
-    const queryString = getParams({
+    const criteria = {
       page: filters?.page,
       search: filters?.search,
-    });
+    };
 
-    dispatch(fetchDevices({ query: queryString }));
+    dispatch(fetchDevices(criteria));
   }, [debouncedSearchTerm, filters.page, dispatch]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -31,7 +31,7 @@ const TableComponent: React.FC<Props> = ({
 }) => {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 5, flexWrap: 'wrap' }}>
-      <div style={{ height: 400, width: '100%', maxWidth: 1100, backgroundColor: 'white' }}>
+      <div style={{ height: 400, width: '100%', backgroundColor: 'white' }}>
         {loading ? (
           <Box
             sx={{

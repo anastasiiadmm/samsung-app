@@ -1,9 +1,20 @@
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Box, Button, IconButton, TextField, Typography } from '@mui/material';
-import React, { ChangeEvent, useState } from 'react';
+import {
+  Box,
+  Button,
+  FormControl,
+  IconButton,
+  InputLabel,
+  MenuItem,
+  Select,
+  Typography,
+} from '@mui/material';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 
-import { useAppDispatch } from 'hooks/reduxHooks';
+import { useAppDispatch, useAppSelector } from 'hooks/reduxHooks';
 import useAlert from 'hooks/useAlert';
+import { ICompanies } from 'interfaces/ICompanies';
+import { commandsSelector, fetchCompanies } from 'redux/companies/companiesSlice';
 import { uploadFile } from 'redux/upload/uploadSlice';
 
 const UploadComponent = () => {
@@ -11,6 +22,11 @@ const UploadComponent = () => {
   const dispatch = useAppDispatch();
   const [companyID, setCompanyID] = useState<string>('');
   const [file, setFile] = useState<File | null>(null);
+  const { companies } = useAppSelector(commandsSelector);
+
+  useEffect(() => {
+    dispatch(fetchCompanies({ page: 1 }));
+  }, [dispatch]);
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
@@ -46,17 +62,25 @@ const UploadComponent = () => {
         noValidate
         sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 3, marginRight: '-40px' }}
       >
-        <TextField
-          margin='normal'
-          required
-          fullWidth
-          id='company_id'
-          label='ID компании'
-          name='company_id'
-          autoFocus
-          value={companyID}
-          onChange={(e) => setCompanyID(e.target.value)}
-        />
+        <FormControl fullWidth>
+          <InputLabel id='company-select-label'>ID компании</InputLabel>
+          <Select
+            required
+            id='company-list'
+            value={companyID}
+            label='ID компании'
+            labelId='company-select-label'
+            onChange={(e) => setCompanyID(e.target.value)}
+          >
+            {companies?.map((company: ICompanies) => {
+              return (
+                <MenuItem key={company?.id} value={company?.id}>
+                  {company?.name}
+                </MenuItem>
+              );
+            })}
+          </Select>
+        </FormControl>
 
         {file && (
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>

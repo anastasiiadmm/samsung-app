@@ -4,6 +4,7 @@ import { RootState } from 'hooks/reduxHooks';
 import { IDevices, pagination } from 'interfaces/IDevices';
 import { IErrors } from 'interfaces/IErrors';
 import axiosApi from 'utils/axios-api';
+import { getParams } from "../../utils/helper";
 
 const nameSpace = 'devices';
 
@@ -23,15 +24,11 @@ const INITIAL_STATE = {
   devicesListPagination: null,
 } as DevicesState;
 
-interface fetchDevicesParams {
-  query?: string;
-}
-
-export const fetchDevices = createAsyncThunk<IDevices[], fetchDevicesParams>(
+export const fetchDevices = createAsyncThunk<IDevices[], object>(
   `${nameSpace}/fetchDevices`,
   async (query, { rejectWithValue }) => {
     try {
-      const resp = await axiosApi.get<IDevices[] | null>(`/devices/${query.query}`);
+      const resp = await axiosApi.get<IDevices[] | null>(`/devices/${getParams(query)}`);
       const { data: devices } = resp;
 
       if (!devices) return [];
