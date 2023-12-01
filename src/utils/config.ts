@@ -1,3 +1,5 @@
 export const tokensLocalStorage = 'infoLocalStorage';
 
-export const apiURL = 'https://knoxguard.kg/api/';
+
+const url = import.meta.env.VITE_API_HOST;
+export const apiURL = `${url}/api/`;

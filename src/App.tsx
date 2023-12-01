@@ -1,19 +1,19 @@
 import React, { useCallback, useEffect } from 'react';
 import { Route, RouteObject, Routes, useRoutes } from 'react-router';
 
-import PaperBase from 'components/PaperBase/PaperBase';
-import Devices from 'containers/Devices/Devices';
-import Home from 'containers/Home/Home';
-import Policies from 'containers/Policies/Policies';
-import SignIn from 'containers/SignIn/SignIn';
-import Support from 'containers/Support/Support';
-import { useAppDispatch } from 'hooks/reduxHooks';
-import { useTokenConfigs } from 'hooks/useCustomConfigs';
-import { IListener } from 'interfaces/IApp';
-import { checkForTokens, clearTokens, logoutUser } from 'redux/auth/authSlice';
+import PaperBase from '@/components/PaperBase';
+import Devices from '@/containers/Devices';
+import Home from '@/containers/Home';
+import Policies from '@/containers/Policies';
+import SignIn from '@/containers/SignIn';
+import Support from '@/containers/Support';
+import { useAppDispatch } from '@/hooks/reduxHooks';
+import { useTokenConfigs } from '@/hooks/useCustomConfigs';
+import { IListener } from '@/interfaces/IApp';
+import { checkForTokens, clearTokens, logoutUser } from '@/redux/auth/authSlice';
 
-import { tokensLocalStorage } from 'utils/config';
-import { defaultLocalStorage, getUserLocalStorage, logoutLocalStorage } from 'utils/storage';
+import { tokensLocalStorage } from '@/utils/config';
+import { defaultLocalStorage, getUserLocalStorage, logoutLocalStorage } from '@/utils/storage';
 
 const routers: RouteObject[] = [
   {

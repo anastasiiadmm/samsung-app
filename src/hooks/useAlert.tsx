@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import AlertComponent from 'components/AlertComponent/AlertComponent';
+import AlertComponent from '@/components/AlertComponent';
 
 const useAlert = () => {
   const [open, setOpen] = useState(false);
@@ -13,9 +13,7 @@ const useAlert = () => {
     setOpen(true);
   };
 
-  const hideAlert = () => {
-    setOpen(false);
-  };
+  const hideAlert = () => setOpen(false);
 
   const Alert = (
     <AlertComponent severity={severity} message={message} open={open} onClose={hideAlert} />

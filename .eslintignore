@@ -1,9 +1,0 @@
-src/assets/*
-*.css
-node_modules
-__tests__
-__mocks__
-public
-build
-/.git
-/.ide

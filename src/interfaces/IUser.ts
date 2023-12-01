@@ -18,12 +18,7 @@ export interface IGroup {
   name: string;
 }
 
-export interface ITokens {
-  refresh: string;
-  access: string;
-}
-
-export interface userMutation {
+export interface IUserSignIn {
   username: string | null;
   password: string | null;
 }
