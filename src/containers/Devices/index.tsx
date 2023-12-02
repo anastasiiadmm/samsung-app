@@ -9,18 +9,21 @@ import TableComponent from '@/components/TableComponent';
 import { useAppDispatch, useAppSelector } from '@/hooks/reduxHooks';
 import { useDebounce } from '@/hooks/useDebounce';
 import { ICommands, ICommandVarious } from '@/interfaces/ICommands';
+import useAlert from '@/hooks/useAlert';
 import { IDevice } from '@/interfaces/IDevice';
 import { IMessage } from '@/interfaces/IMessage';
+import ModalComponent from '@/components/Modals';
 import { postCommands } from '@/redux/commands/commandsSlice';
 import { devicesSelector, fetchDevices } from '@/redux/devices/devicesSlice';
 import { fetchPolitics } from '@/redux/politics/politicsSlice';
-import useAlert from '@/hooks/useAlert';
+import { SelectorMessageModal } from '@/components/Modals/Modals/SelectorMessageModal';
 
 const Devices = () => {
   const dispatch = useAppDispatch();
   const { showAlert, Alert } = useAlert();
   const { devices, devicesLoading, devicesListPagination } = useAppSelector(devicesSelector);
-
+  
+  const [modalParams, setModalParams] = useState(null);
   const [filters, setFilters] = useState({ page: 1, search: '' });
   const debouncedSearchTerm = useDebounce(filters?.search, 500);
   const [rowSelectionModel, setRowSelectionModel] = useState<GridRowSelectionModel>([]);
@@ -82,17 +85,12 @@ const Devices = () => {
       if (!message) showAlert('error', 'Не возможно получить сообщение, создайте новую политику!');
     }
 
+    if (type === ICommandVarious.sendMessage) {
+      setModalParams(true);
+      return;
+    }
+
     switch (type) {
-      case ICommandVarious.sendMessage:
-        data = {
-          command: ICommandVarious.sendMessage,
-          payload: {
-            tel: message?.tel,
-            message: message?.text,
-            enable_full_screen: false,
-          },
-        } as ICommands;
-        break;
       case ICommandVarious.unlock:
         data = {
           command: ICommandVarious.unlock,
@@ -252,6 +250,9 @@ const Devices = () => {
         />
       </Box>
       {Alert}
+      <ModalComponent open={!!modalParams} handleClose={() => setModalParams(null)}>
+        <SelectorMessageModal payload={modalParams} />
+      </ModalComponent>
     </Box>
   );
 };

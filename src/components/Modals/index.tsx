@@ -26,7 +26,7 @@ const style = {
   border: '1px solid gray',
 };
 
-const Index: React.FC<Props> = ({ open, children, handleClose }) => {
+const Modals: React.FC<Props> = ({ open, children, handleClose }) => {
   return (
     <Modal open={open} onClose={handleClose}>
       <Box sx={style}>
@@ -45,4 +45,4 @@ const Index: React.FC<Props> = ({ open, children, handleClose }) => {
   );
 };
 
-export default Index;
+export default Modals;

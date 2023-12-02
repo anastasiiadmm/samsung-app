@@ -10,9 +10,9 @@ import { Box, Card, CardActionArea, CardContent, Typography } from '@mui/materia
 import ModalComponent from '@/components/Modals';
 import BlockModal from '@/components/Modals/Modals/BlockModal';
 import ReminderModal from '@/components/Modals/Modals/ReminderModal';
-import SendNotificationModal from '@/components/Modals/Modals/SendNotificationModal';
 import UnlockModal from '@/components/Modals/Modals/UnlockModal';
 import UploadComponent from '@/components/Modals/Modals/UploadComponent';
+import SendNotificationModal from '@/components/Modals/Modals/SendNotificationModal';
 import { useAppDispatch, useAppSelector } from '@/hooks/reduxHooks';
 import { resetUploadSuccess, uploadSelector } from '@/redux/upload/uploadSlice';
 import { usersSelector } from '@/redux/users/usersSlice';
