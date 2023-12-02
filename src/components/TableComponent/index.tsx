@@ -35,6 +35,7 @@ const TableComponent: React.FC<Props> = ({
         style={{
           height: 400,
           width: '100%',
+          borderRadius: '8px',
           backgroundColor: 'white',
         }}
       >

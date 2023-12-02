@@ -2,14 +2,14 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import { RootState } from '@/hooks/reduxHooks';
 import { ICommands } from '@/interfaces/ICommands';
-import { IErrors } from '@/interfaces/IErrors';
+import { IError } from '@/interfaces/IError';
 import axiosApi from '@/utils/axios-api';
 
 const nameSpace = 'commands';
 
 interface CommandsState {
   commandsLoading: Boolean;
-  commandsError: IErrors | null;
+  commandsError: IError | null;
 }
 
 const INITIAL_STATE = {

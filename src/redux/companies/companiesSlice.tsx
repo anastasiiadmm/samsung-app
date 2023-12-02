@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import axiosApi from '@/utils/axios-api';
 import { RootState } from '@/hooks/reduxHooks';
-import { IErrors } from '@/interfaces/IErrors';
+import { IError } from '@/interfaces/IError';
 import { getParams } from '@/utils/helper';
 import { ICompany } from '@/interfaces/ICompany';
 import { IPagination } from '@/interfaces/IDevice';
@@ -13,7 +13,7 @@ interface CompaniesState {
   companies: ICompany[] | null;
   companiesPagination: IPagination | null;
   companiesLoading: Boolean;
-  companiesError: IErrors | null;
+  companiesError: IError | null;
 }
 
 const INITIAL_STATE = {

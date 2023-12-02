@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import moment from 'moment';
 import SearchIcon from '@mui/icons-material/Search';
 import Button from '@mui/material/Button';
@@ -8,30 +8,23 @@ import { Box, Grid, TextField, Toolbar, Typography } from '@mui/material';
 import TableComponent from '@/components/TableComponent';
 import { useAppDispatch, useAppSelector } from '@/hooks/reduxHooks';
 import { useDebounce } from '@/hooks/useDebounce';
-import { ICommands } from '@/interfaces/ICommands';
+import { ICommands, ICommandVarious } from '@/interfaces/ICommands';
 import { IDevice } from '@/interfaces/IDevice';
+import { IMessage } from '@/interfaces/IMessage';
 import { postCommands } from '@/redux/commands/commandsSlice';
 import { devicesSelector, fetchDevices } from '@/redux/devices/devicesSlice';
+import { fetchPolitics } from '@/redux/politics/politicsSlice';
+import useAlert from '@/hooks/useAlert';
 
 const Devices = () => {
   const dispatch = useAppDispatch();
+  const { showAlert, Alert } = useAlert();
   const { devices, devicesLoading, devicesListPagination } = useAppSelector(devicesSelector);
-  const determinePageNumber = () => {
-    if (devicesListPagination?.next) {
-      return Number(devicesListPagination.next);
-    }
-    if (devicesListPagination?.previous) {
-      return Number(devicesListPagination.previous);
-    }
-    return 1;
-  };
-  const [filters, setFilters] = useState({
-    page: determinePageNumber(),
-    search: '',
-  });
+
+  const [filters, setFilters] = useState({ page: 1, search: '' });
+  const debouncedSearchTerm = useDebounce(filters?.search, 500);
   const [rowSelectionModel, setRowSelectionModel] = useState<GridRowSelectionModel>([]);
   const [selectedModal, setSelectedModel] = useState<IDevice | null>(null);
-  const debouncedSearchTerm = useDebounce(filters?.search, 500);
 
   useEffect(() => {
     const criteria = {
@@ -42,6 +35,18 @@ const Devices = () => {
     dispatch(fetchDevices(criteria));
   }, [debouncedSearchTerm, filters.page, dispatch]);
 
+  const fetchMessage = useCallback(
+    async (type: ICommandVarious) => {
+      const {
+        // @ts-ignore
+        payload: { results },
+      } = await dispatch(fetchPolitics({ message_type: type }));
+      // for chosen `type` extract needed message object
+      return !!results.length ? results[0] : {};
+    },
+    [dispatch],
+  );
+
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setFilters((prevFilters) => ({ ...prevFilters, search: value }));
@@ -49,6 +54,7 @@ const Devices = () => {
 
   const handleRowSelectionChange = (newRowSelectionModel: GridRowSelectionModel) => {
     if (newRowSelectionModel.length > 1) {
+      // eslint-disable-next-line no-param-reassign
       newRowSelectionModel = [newRowSelectionModel[newRowSelectionModel.length - 1]];
     }
 
@@ -58,59 +64,65 @@ const Devices = () => {
       const selectedRowId = newRowSelectionModel[0];
       const selectedRow = devices?.find((row) => row.id === selectedRowId);
 
-      if (selectedRow) {
-        setSelectedModel(selectedRow);
-      }
+      // re-set new row in selected model
+      if (selectedRow) setSelectedModel(selectedRow);
     }
   };
 
-  const sendDevicesHandler = (type: string) => {
+  const sendDevicesHandler = async (type: string) => {
     let data: ICommands = {};
+    const imei: string = selectedModal.imei || selectedModal.imei2;
+
+    let message: IMessage | null = null;
+    const chosenMessage = [ICommandVarious.unlock, ICommandVarious.lock].includes(
+      type as ICommandVarious,
+    );
+    if (chosenMessage) {
+      message = await fetchMessage(type as ICommandVarious);
+      if (!message) showAlert('error', 'Не возможно получить сообщение, создайте новую политику!');
+    }
 
     switch (type) {
-      case 'send-message':
+      case ICommandVarious.sendMessage:
         data = {
-          command: 'send-message',
+          command: ICommandVarious.sendMessage,
           payload: {
-            message: '',
-            tel: '',
+            tel: message?.tel,
+            message: message?.text,
             enable_full_screen: false,
           },
         } as ICommands;
         break;
-      case 'unlock':
+      case ICommandVarious.unlock:
         data = {
-          command: 'unlock',
+          command: ICommandVarious.unlock,
           payload: {
-            device_uid: selectedModal?.imei || '',
-            message: 'something',
+            device_uid: imei,
+            message: message?.text,
           },
         } as ICommands;
         break;
-      case 'lock':
+      case ICommandVarious.lock:
         data = {
-          command: 'lock',
+          command: ICommandVarious.lock,
           payload: {
-            device_uid: selectedModal?.imei || '',
-            message: '',
-            tel: selectedModal?.sim_card_number || '',
-            email: '',
+            device_uid: imei,
+            message: message?.text,
+            tel: selectedModal.sim_card_number || '',
           },
         } as ICommands;
         break;
-      case 'delete':
+      case ICommandVarious.delete:
         data = {
-          command: 'delete',
-          payload: {
-            device_uid: selectedModal?.imei || '',
-          },
+          command: ICommandVarious.delete,
+          payload: { device_uid: imei },
         } as ICommands;
         break;
       default:
         throw new Error(`Unsupported type: ${type}`);
     }
 
-    dispatch(postCommands({ data }));
+    await dispatch(postCommands({ data }));
   };
 
   const columns: GridColDef[] = [
@@ -148,7 +160,14 @@ const Devices = () => {
           flexWrap: 'wrap',
         }}
       >
-        <Toolbar sx={{ backgroundColor: 'white', borderRadius: 6, width: 340 }}>
+        <Toolbar
+          sx={{
+            width: 340,
+            borderRadius: '6px',
+            backgroundColor: 'white',
+            border: '1px solid rgba(0, 0, 0, 0.2)',
+          }}
+        >
           <Grid container spacing={2} alignItems='center'>
             <Grid item>
               <SearchIcon color='inherit' sx={{ display: 'block' }} />
@@ -169,23 +188,51 @@ const Devices = () => {
           </Grid>
         </Toolbar>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-          <Button variant='contained' onClick={() => sendDevicesHandler('send-message')}>
+          <Button
+            size='small'
+            variant='outlined'
+            sx={{ backgroundColor: 'white' }}
+            disabled={!rowSelectionModel.length}
+            onClick={() => sendDevicesHandler('send-message')}
+          >
             Уведомление
           </Button>
-          <Button variant='contained' color='error' onClick={() => sendDevicesHandler('unlock')}>
+          <Button
+            size='small'
+            color='error'
+            variant='outlined'
+            sx={{ backgroundColor: 'white' }}
+            disabled={!rowSelectionModel.length}
+            onClick={() => sendDevicesHandler('lock')}
+          >
             Заблокировать
           </Button>
-          <Button variant='contained' onClick={() => sendDevicesHandler('lock')}>
+          <Button
+            size='small'
+            variant='outlined'
+            sx={{ backgroundColor: 'white' }}
+            disabled={!rowSelectionModel.length}
+            onClick={() => sendDevicesHandler('unlock')}
+          >
             Разблокировать
           </Button>
           <Button
-            variant='contained'
+            size='small'
             color='success'
+            variant='outlined'
+            sx={{ backgroundColor: 'white' }}
+            disabled
             onClick={() => sendDevicesHandler('activate')}
           >
             Активировать
           </Button>
-          <Button variant='contained' color='error' onClick={() => sendDevicesHandler('delete')}>
+          <Button
+            size='small'
+            color='error'
+            variant='contained'
+            disabled={!rowSelectionModel.length}
+            onClick={() => sendDevicesHandler('delete')}
+          >
             Удалить
           </Button>
         </Box>
@@ -204,6 +251,7 @@ const Devices = () => {
           handleRowSelectionChange={handleRowSelectionChange}
         />
       </Box>
+      {Alert}
     </Box>
   );
 };

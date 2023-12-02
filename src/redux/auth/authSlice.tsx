@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import axiosApi from '@/utils/axios-api';
 import { RootState } from '@/hooks/reduxHooks';
-import { AuthError, IErrors } from '@/interfaces/IErrors';
+import { AuthError, IError } from '@/interfaces/IError';
 import { IJWToken } from '@/interfaces/IJWToken';
 import { IUserSignIn } from '@/interfaces/IUser';
 import { addLocalStorage } from '@/utils/storage';
@@ -10,7 +10,7 @@ import { addLocalStorage } from '@/utils/storage';
 interface AuthState extends IJWToken {
   user: null;
   error: AuthError | null;
-  commonError: IErrors | null;
+  commonError: IError | null;
   success: boolean | null;
   loading: boolean;
 }

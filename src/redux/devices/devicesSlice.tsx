@@ -2,8 +2,8 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import { RootState } from '@/hooks/reduxHooks';
 import { IDevice, IPagination } from '@/interfaces/IDevice';
-import { IErrors } from '@/interfaces/IErrors';
-import { getParams } from "@/utils/helper";
+import { IError } from '@/interfaces/IError';
+import { getParams } from '@/utils/helper';
 import axiosApi from '@/utils/axios-api';
 
 const nameSpace = 'devices';
@@ -11,10 +11,10 @@ const nameSpace = 'devices';
 interface DevicesState {
   devices: IDevice[] | null;
   devicesLoading: boolean;
-  devicesError: IErrors | null;
+  devicesError: IError | null;
   devicesListPagination: IPagination | null;
   devicesDeleteLoading: boolean;
-  devicesDeleteError: IErrors | null;
+  devicesDeleteError: IError | null;
 }
 
 const INITIAL_STATE = {

@@ -10,12 +10,16 @@ import useAlert from '@/hooks/useAlert';
 import { useAppDispatch } from '@/hooks/reduxHooks';
 import { ISubmitMessage } from '@/interfaces/IMessage';
 import { submitPolitics } from '@/redux/politics/politicsSlice';
+import { ICommandVarious } from '@/interfaces/ICommands';
 
 const BlockModal = () => {
   const dispatch = useAppDispatch();
   const { showAlert, Alert } = useAlert();
   const [submitPayload, setSubmitPayload] = useState<ISubmitMessage>({
-    message_type: 'lock',
+    tel: '',
+    text: undefined,
+    msgPack: undefined,
+    message_type: ICommandVarious.lock,
   });
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {

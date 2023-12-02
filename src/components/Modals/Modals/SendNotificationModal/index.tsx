@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import IconButton from '@mui/material/IconButton';
 import { Box, Button, Icon, TextField, Typography } from '@mui/material';
@@ -6,18 +6,20 @@ import { Box, Button, Icon, TextField, Typography } from '@mui/material';
 // @ts-ignore
 import notification from '@/assets/images/notification.png';
 import useAlert from '@/hooks/useAlert';
-import { submitPolitics } from '@/redux/politics/politicsSlice';
-import { useAppDispatch } from '@/hooks/reduxHooks';
+import { fetchPolitics, messagesSelector, submitPolitics } from '@/redux/politics/politicsSlice';
+import { useAppDispatch, useAppSelector } from '@/hooks/reduxHooks';
 import { ISubmitMessage } from '@/interfaces/IMessage';
+import { ICommandVarious } from '@/interfaces/ICommands';
 
 const SendNotificationModal = () => {
   const { showAlert } = useAlert();
   const dispatch = useAppDispatch();
+  const { messages, error } = useAppSelector(messagesSelector);
   const [submitPayload, setSubmitPayload] = useState<ISubmitMessage>({
     tel: '',
     text: '',
-    msgPack: undefined,
-    message_type: 'notification',
+    msgPack: {},
+    message_type: ICommandVarious.sendMessage,
   });
 
   const changeHandler = (
@@ -31,13 +33,10 @@ const SendNotificationModal = () => {
 
   const handleAddEmptyField = () => {
     setSubmitPayload((payload) => {
-      const prevPack = payload.msgPack || {};
-      const indexPack =
-        +Object.keys(prevPack)
-          .reverse()
-          .find((key) => /^message-param-\d+/.test(key))
-          ?.split('-')?.[2] || 0;
-      prevPack[`message-param-${indexPack + 1}`] = '';
+      const prevPack = payload.msgPack;
+      // @ts-ignore
+      const lastIndexPack = Math.max(...Object.keys(prevPack).map((key) => key.split('-')[2])) || 0;
+      prevPack[`message-param-${lastIndexPack + 1}`] = '';
       return { ...payload, msgPack: prevPack };
     });
   };
@@ -54,6 +53,26 @@ const SendNotificationModal = () => {
       }
     });
   };
+
+  useEffect(() => {
+    dispatch(fetchPolitics({ message_type: ICommandVarious.sendMessage }));
+    setSubmitPayload({
+      id: undefined,
+      tel: undefined,
+      text: undefined,
+      message_type: undefined,
+      msgPack:
+        messages?.reduce(
+          (accumulator, message, currentIndex) => ({
+            ...accumulator,
+            [`message-param-${currentIndex}`]: message.text,
+          }),
+          {},
+        ) || {},
+    });
+  }, []);
+
+  if (!!error) return showAlert('error', error.detail);
 
   return (
     <Box
@@ -104,16 +123,16 @@ const SendNotificationModal = () => {
             onChange={changeHandler}
             defaultValue={submitPayload.tel}
           />
-          {Object.entries(submitPayload.msgPack || {}).flatMap(([key, value], index) => (
+          {Object.entries(submitPayload.msgPack).flatMap(([key, value], index) => (
             <TextField
               key={key}
               rows={2}
               multiline
               variant='outlined'
               onChange={(e) => changeHandler(e, `message-param-${index}`)}
-              defaultValue={value}
+              defaultValue={value?.text || value}
               id={`outlined-basic-${index}`}
-              label={`Уведомление ${++index}`}
+              label={`Уведомление ${index + 1}`}
             />
           ))}
           <Box

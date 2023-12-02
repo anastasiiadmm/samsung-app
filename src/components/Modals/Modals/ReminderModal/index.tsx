@@ -1,6 +1,6 @@
 import React from 'react';
-import { Box, TextField, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
+import { Box, TextField, Typography } from '@mui/material';
 
 // @ts-ignore
 import reminder from '@/assets/images/reminder.png';

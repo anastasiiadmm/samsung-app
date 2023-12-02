@@ -1,3 +1,5 @@
+import { ICommandVarious } from "@/interfaces/ICommands";
+
 export interface IMessage {
   id?: number | null;
   tel: string;
@@ -5,7 +7,7 @@ export interface IMessage {
 }
 
 export interface ISubmitMessage extends IMessage {
+  msgPack: object;
   text: string | null;
-  msgPack: object | null;
-  message_type: 'lock' | 'push' | 'unlock' | 'reminder' | 'notification';
+  message_type: ICommandVarious;
 }

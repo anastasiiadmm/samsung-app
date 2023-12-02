@@ -15,7 +15,7 @@ import useAlert from '@/hooks/useAlert';
 import { uploadFile } from '@/redux/upload/uploadSlice';
 import { useAppDispatch, useAppSelector } from '@/hooks/reduxHooks';
 import { commandsSelector, fetchCompanies } from '@/redux/companies/companiesSlice';
-import { ICompany } from "@/interfaces/ICompany";
+import { ICompany } from '@/interfaces/ICompany';
 
 const UploadComponent = () => {
   const { showAlert, Alert } = useAlert();
@@ -38,9 +38,7 @@ const UploadComponent = () => {
     try {
       const formData = new FormData();
       formData.append('company_id', companyID);
-      if (file) {
-        formData.append('excel_file', file);
-      }
+      if (file) formData.append('excel_file', file);
 
       await dispatch(uploadFile(formData)).unwrap();
     } catch (e) {

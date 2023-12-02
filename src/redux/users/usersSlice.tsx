@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import axiosApi from '@/utils/axios-api';
-import { IErrors } from '@/interfaces/IErrors';
+import { IError } from '@/interfaces/IError';
 import { IUser } from '@/interfaces/IUser';
 import { RootState } from '@/hooks/reduxHooks';
 
@@ -10,7 +10,7 @@ const nameSpace = 'users';
 interface UsersState {
   user: IUser | null;
   userLoading: boolean;
-  userError: IErrors | null;
+  userError: IError | null;
 }
 
 const INITIAL_STATE = {

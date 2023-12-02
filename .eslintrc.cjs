@@ -31,6 +31,8 @@ module.exports = {
   plugins: ["@typescript-eslint", "react"],
   rules: {
     "linebreak-style": 0,
+    "indent": "off",
+    "@typescript-eslint/indent": "off",
     "import/no-import-module-exports": 0,
     "react/jsx-uses-react": 0,
     "react/react-in-jsx-scope": 0,
@@ -74,6 +76,8 @@ module.exports = {
       parser: "@typescript-eslint/parser",
       rules: {
         "linebreak-style": 0,
+        "indent": "off",
+        "@typescript-eslint/indent": "off",
         "import/no-import-module-exports": 0,
         "react/jsx-uses-react": 0,
         "react/react-in-jsx-scope": 0,

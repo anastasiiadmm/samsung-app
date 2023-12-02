@@ -1,13 +1,16 @@
+export enum ICommandVarious {
+  lock = 'lock',
+  unlock = 'unlock',
+  delete = 'delete',
+  getInfo = 'get-info',
+  sendMessage = 'send-message',
+  getDeviceLog = 'get-device-log',
+  uploadDevices = 'upload-devices',
+  setBlinkingReminder = 'set-blinking-reminder',
+}
+
 export interface ICommands {
-  command?:
-    | 'lock'
-    | 'unlock'
-    | 'send-message'
-    | 'set-blinking-reminder'
-    | 'delete'
-    | 'get-device-log'
-    | 'get-info'
-    | 'upload-devices';
+  command?: ICommandVarious;
   payload?: {
     lock?: {
       device_uid?: string;

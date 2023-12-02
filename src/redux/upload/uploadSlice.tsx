@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import { RootState } from '@/hooks/reduxHooks';
-import { IErrors } from '@/interfaces/IErrors';
+import { IError } from '@/interfaces/IError';
 import axiosApi from '@/utils/axios-api';
 
 const nameSpace = 'upload';
@@ -9,7 +9,7 @@ const nameSpace = 'upload';
 interface UploadState {
   uploadLoading: Boolean;
   uploadSuccess: Boolean;
-  uploadError: IErrors | null;
+  uploadError: IError | null;
 }
 
 const INITIAL_STATE = {

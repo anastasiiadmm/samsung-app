@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import { Box, Card, CardContent, Divider, Typography } from '@mui/material';
-import ChartComponent from "@/components/ChartComponent";
+import ChartComponent from '@/components/ChartComponent';
 
 
 const Home = () => {
